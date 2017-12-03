@@ -12,7 +12,7 @@
 #define MAX_LEN 40
 #define MIN_LEN 3
 
-void registo(){
+void pedido_registo(){
 
     int i, err_escrita=0, guardar=0, erro = 0,tam_pw, tam_id; 
     char id[MAX], pw[MAX], id_f[MAX], pw_f[MAX];	    
@@ -77,7 +77,7 @@ void registo(){
     fclose(fd);
 }
 
-void login(){
+void pedido_login(){
     
     char id_f[MAX_LEN], pw_f[MAX_LEN], id[MAX_LEN], pw[MAX_LEN];
     int match=0, err, nuser;
@@ -115,10 +115,10 @@ void menu(){				 // fazer função para verificação de erros e proteger o inpu
         scanf("%d", &op);
 
         if(op == 1)
-            registo();
+            pedido_registo();
 
         if(op == 2)
-            login();
+            pedido_login();
 
         if(op == 3)
             exit(0);
@@ -128,10 +128,16 @@ void menu(){				 // fazer função para verificação de erros e proteger o inpu
 int main(void){
 //  keywords comment -> testar, falta
 	
+    
+
 	menu();
 
 	exit(0);
 }
+
+
+
+
 
 
 
