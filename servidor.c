@@ -95,32 +95,48 @@ int  server(){
 
 
 int main(){
-int abc;
-  printf("vou escutar 1");
-    printf("vou escutar 2");
-  scanf("%d",&abc);
 
-    int fd_server = mkfifo(PIPE_DO_SERVIDOR,0777);
 
-    printf("vou escutar 1");
-      printf("vou escutar 2");
-    scanf("%d",&abc);
-                     //testar
-    fd_server = open(PIPE_DO_SERVIDOR,O_RDWR);                  //testar
-    printf("vou escutar 1");
-      printf("vou escutar 2");
-    scanf("%d",&abc);
-    printf("vou escutar, apos abrir");
-  scanf("%d",&abc);
-    MTS1 a;
-    while(1){
-      printf("estou à escuta");
-      read(fd_server,&a,sizeof(a));
-      printf("%c, %d\n",a.tipo,a.pid );
-      return 0;
+
+    setbuf(stdout,NULL);
+    int n=0,fifo_err, fd_server;
+
+    char c_teste;
+    MFC2 mfc_login;
+
+    fifo_err = mkfifo(PIPE_DO_SERVIDOR, 0777);
+    if(fifo_err == -1){
+      printf("erro a criar pipe"); //falta
     }
-    unlink(PIPE_DO_SERVIDOR);
+
+    fd_server = open(PIPE_DO_SERVIDOR,O_RDWR);
+    if(fd_server == -1){
+      printf("erro a abrir fich");
+    }
+
+    printf("vou escutar, apos abrir\n");
+
+    while(1){
+      if(read(fd_server,&c_teste,sizeof(c_teste))==-1){
+        printf("o read nao consegiui ler");
+      }
+      if(c_teste=='l'){
+        if(read(fd_server,&mfc_login,sizeof(mfc_login)) == -1)
+            printf("o read nao consegiui ler");
+        printf("%s", mfc_login.msg1);
+//        printf("%s", mfc_login.msg2);
+//        printf("%d\n",mfc_login.pid);
+      }
+    }
+//    MTS1 a;
+//    while(1){
+//      printf("estou à escuta");
+//      read(fd_server,&a,sizeof(a));
+//      printf("%c, %d\n",a.tipo,a.pid );
+//      return 0;}
+
     close(fd_server);
+    unlink(PIPE_DO_SERVIDOR);
     return 0;
 }
 

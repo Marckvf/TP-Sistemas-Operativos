@@ -128,17 +128,21 @@ void menu(){				 // fazer função para verificação de erros e proteger o inpu
 
 int main(void){
 //  keywords comment -> testar, falta
+  int PID = getpid();
+  int fd_server = open(PIPE_DO_SERVIDOR,O_WRONLY);
+  if(fd_server == -1){
+    printf("erro a abrir fifo");
+  }
 
-  int fd_server = open("PIPE_DO_SERVIDOR",O_RDONLY);
-  MTS1 a;
-  a.tipo='a';
-  a.pid = 123;
-  int num=5;
-  write(fd_server,&num,sizeof(num));
+  MTS2 mts_login = {'l',PID,"user","pass"};
+
+
+  if(write(fd_server,&mts_login,sizeof(mts_login))== -1)
+    printf("erro a escrever no pipe");
 
 
 
-	menu();
+	//menu();
 
 	exit(0);
 }
