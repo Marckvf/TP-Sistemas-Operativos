@@ -46,16 +46,26 @@ typedef struct cliente_jogo{
     p_Cliente next_cliente;
 }Cliente;
 
+// Estruturas de envio e respetivas de recebimento (cliente > servidor)
 typedef struct msg_to_server_1{
     char tipo;
     int pid;
     char msg1[MAX_MSG];
 }MTS1;
+typedef struct msg_fom_cliente_1{
+    int pid;
+    char msg1[MAX_MSG];
+}MFC1;
 typedef struct msg_to_server_2{
     char tipo;
     int pid;
     char msg1[MAX_MSG];
     char msg2[MAX_MSG];
 }MTS2;
+typedef struct msg_from_cliente_2{
+    int pid;
+    char msg1[MAX_MSG];
+    char msg2[MAX_MSG];
+}MFC2;
 //mapa
 //inimigo
