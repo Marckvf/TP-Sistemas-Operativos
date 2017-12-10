@@ -35,8 +35,7 @@ int main(){
     if(cmd[0]=='a'){
         if(cmd[1]=='d' && cmd[2]=='d' && cmd[3]==' ')
         printf("registado!");
-           for(i=4;valido && i<99 && cmd[i]!='\0';i++){
-                         printf("\n avancei 1 carater");
+/*                         printf("\n avancei 1 carater");
                 if( (cmd[i]<64 || cmd[i]>91) && (cmd[i]<96 || cmd[i]>123) ){        // se ler algo que nao seja letra
                     printf("\n verificar letras");
                     valido=0;     // serve para indicar a todos os if's encadeados que houve um erro no input e que se tmos de voltar ao while principal.
@@ -51,6 +50,29 @@ int main(){
                     }
                 }
            }
+*/           //--------------------------------------------------------
+           for(i=4;valido && i<99 && cmd[i]!='\0';i++){
+                         printf("\n avancei 1 carater");
+                if( (cmd[i]>64 && cmd[i]<91) || (cmd[i]>96 && cmd[i]<123) ){        // se for letra
+                    printf("\n verificar letras");
+                    //valido=0;     // serve para indicar a todos os if's encadeados que houve um erro no input e que se tmos de voltar ao while principal.
+                    continue;
+                }
+                else if (cmd[i]==' ' && count_space == 0){  // se for o 1º espaço, se houver 2 dá erro.
+                    printf("\n espaco!");
+                    count_space++;
+                    pos_espaco=i;   //guarda o intervalo entre o user e a pass, no buffer.
+                }
+                else{
+                  printf("%s\n","string corrumpida" );
+                  valido = 0;
+                }
+           }
+           if (valido)
+           printf("%s\n","input correto" );
+           if (!valido)
+           printf("%s\n","input INcorreto" );
+           //--------------------------------------------------------
            //após já sabemos que so temos carateres validos e 1 espaço, bem como a sua posição. entao vefiricamos o tamanho do user e da pass.
             if(valido && (pos_espaco-4)<MAX_LEN_USER && (pos_espaco-4)>MIN_LEN_USER && (pos_final-pos_espaco)>MIN_LEN_PASS && (pos_final-pos_espaco)<MAX_LEN_PASS){
                 for(v=0,i=4;i<pos_espaco;v++,i++){              //passa o nome user para o array user
@@ -102,7 +124,7 @@ int main(){
 
 int registo(char *id, char *pw){
 
-printf("%s\n", "entrei no registo" );
+  printf("%s\n", "entrei no registo" );
 
   FILE *f = fopen("registo.txt", "a+");
 
@@ -122,7 +144,7 @@ printf("%s\n", "entrei no registo" );
   tam_id = strlen(id);
   tam_pw = strlen(pw);
 
-//Inicio de verificações de segurança:
+  //Inicio de verificações de segurança:
   if (strcmp(id, pw) == 0){
      perror("Password e User iguais!");
      fclose(f);
@@ -149,7 +171,7 @@ printf("%s\n", "entrei no registo" );
   }
 
 
-//Se tiver passado nas validações, então Guardar:
+  //Se tiver passado nas validações, então Guardar:
   err_escrita = fprintf(f, "%s\t%s\n", id, pw);
 
   if(err_escrita<0){                                                 // erro na escrita para ficheiro
@@ -166,17 +188,18 @@ printf("%s\n", "entrei no registo" );
 
 
 void server_online(){
+  //setbuf(stdout,NULL);
 
-      printf("entrei na func server_online");
+      printf("Server_online\n");
 
-      int fd_server;
-      char c_tipo_mensagem = '0';
+      int array_pid_cliente[30], it_apc=0;      // array com os pids de clientes sem login, possiveis jogadores validos
+      int fd_server, tipo_mensagem;
       MFC2 mfc_login;                             //estrutura com 2 arrays, para user e pass.
 
       if( mkfifo(PIPE_DO_SERVIDOR, 0777) == -1){
         perror("Erro na Inicialização. Só pode existir uma instancia do Servidor.");
         return;
-      }
+       }
 
       fd_server = open(PIPE_DO_SERVIDOR,O_RDWR);
       if(fd_server == -1){
@@ -187,24 +210,32 @@ void server_online(){
 
       while(1){
 
-        c_tipo_mensagem = '0';
+        tipo_mensagem = 0;
 
-        if(read(fd_server,&c_tipo_mensagem,sizeof(c_tipo_mensagem))==-1)
+        if(read(fd_server,&tipo_mensagem,sizeof(tipo_mensagem))==-1)
           exit_error(fd_server,"A func read nao consegiui ler");
 
-        if(c_tipo_mensagem = 'l'){
+          printf("%d\n",tipo_mensagem );
 
-          printf("Fazer Aqui tratamento para login\n ler resto estrutura, etc");
+        if(tipo_mensagem == 1 ){ //
+
+          printf("Fazer Aqui tratamento para login\n ler resto estrutura, etc\n");
 
           if(read(fd_server,&mfc_login,sizeof(mfc_login)) == -1)
             exit_error(fd_server,"A func read nao consegiui ler");
+
           printf("%s", mfc_login.msg1);
           printf("%s", mfc_login.msg2);
 
 
         }
-        else if (c_tipo_mensagem = '0'){
-          perror("Foram recebidos dados inválidos.\n O servidor vai continuar em funcionamento.");
+        if (tipo_mensagem == 0){
+          perror("Atenção: Foram recebidos dados inválidos. \nO servidor vai continuar em funcionamento.\n");
+          continue;
+        }
+        else if(tipo_mensagem > 0){    //deverá ser um PID
+          printf("recebi um pid, vou guardar!\n");
+          array_pid_cliente[it_apc] = tipo_mensagem;
           continue;
         }
       }
