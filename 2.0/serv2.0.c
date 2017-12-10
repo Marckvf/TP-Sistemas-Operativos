@@ -35,26 +35,11 @@ int main(){
     if(cmd[0]=='a'){
         if(cmd[1]=='d' && cmd[2]=='d' && cmd[3]==' ')
         printf("registado!");
-/*                         printf("\n avancei 1 carater");
-                if( (cmd[i]<64 || cmd[i]>91) && (cmd[i]<96 || cmd[i]>123) ){        // se ler algo que nao seja letra
-                    printf("\n verificar letras");
-                    valido=0;     // serve para indicar a todos os if's encadeados que houve um erro no input e que se tmos de voltar ao while principal.
-                }
-                else if (cmd[i]==' '){
-                    printf("\n espaco!");
-                    count_space++;
-                    pos_espaco=i;   //guarda o intervalo entre o user e a pass, no buffer.
-                    if(count_space>1 || count_space==0){
-                        valido = 0;
-                        break;
-                    }
-                }
-           }
-*/           //--------------------------------------------------------
-           for(i=4, valido =1;valido && i<99 && cmd[i]!='\0';i++){
-                         printf("\n pos: %d",i);
+          // vamos varrer o cmd e verificar o input, guardando a pos entre user e pass e a pos final.
+             for(i=4, valido=1 ;valido && i<99 && cmd[i]!='\n' && cmd[i]=='\0';i++){
+                         printf("\n pos: %d,",i);
                 if( (cmd[i]>64 && cmd[i]<91) || (cmd[i]>96 && cmd[i]<123) || (cmd[i]>47 && cmd[i]<58) ){        // se for letra ou numero
-                    printf("\n %c e letra", cmd[i]);
+                    printf("\t %c e letra", cmd[i]);
                     //valido=0;     // serve para indicar a todos os if's encadeados que houve um erro no input e que se tmos de voltar ao while principal.
                     continue;
                 }
@@ -64,23 +49,27 @@ int main(){
                     pos_espaco=i;   //guarda o intervalo entre o user e a pass, no buffer.
                     continue;
                 }
-                if (cmd[i]=='\0'){
+                if (cmd[i]=='\n' || cmd [i]=='\0'){  // funciona com o scanf ou fgets, que guarda o \n
                     printf("%s\n","cheguei ao barra zero" );
                     break;
                 }
                 else{
-                    printf(" %c \n%s\n",cmd[i],"string corrumpida" );
+                    printf(" -%c- \n%s\n",cmd[i],"string corrumpida" );
                     valido = 0;
                 }
-
            }
+
            if (valido)
            printf("%s\n","input correto" );
            if (!valido)
            printf("%s\n","input INcorreto" );
+
            //--------------------------------------------------------
            //após já sabemos que so temos carateres validos e 1 espaço, bem como a sua posição. entao vefiricamos o tamanho do user e da pass.
             if(valido && (pos_espaco-4)<MAX_LEN_USER && (pos_espaco-4)>MIN_LEN_USER && (pos_final-pos_espaco)>MIN_LEN_PASS && (pos_final-pos_espaco)<MAX_LEN_PASS){
+
+              printf("%s\n","\n\ncheguei a recolha" );
+
                 for(v=0,i=4;i<pos_espaco;v++,i++){              //passa o nome user para o array user
                     user[v]=cmd[i];
                 }user[v]='\0';
