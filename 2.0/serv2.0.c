@@ -8,7 +8,7 @@ int main(){
   char pass[MAX_LEN_USER];
   char user[MAX_LEN_USER];
 
-  int i, pos_espaco, pos_final, valido=1,v, resultado=0, count_space=0;
+  int i, pos_espaco, pos_final, valido,v, resultado=0, count_space=0;
   char cmd[100];
 
   char teste_temp1[20], teste_temp2[20];
@@ -51,22 +51,28 @@ int main(){
                 }
            }
 */           //--------------------------------------------------------
-           for(i=4;valido && i<99 && cmd[i]!='\0';i++){
-                         printf("\n avancei 1 carater");
-                if( (cmd[i]>64 && cmd[i]<91) || (cmd[i]>96 && cmd[i]<123) ){        // se for letra
-                    printf("\n verificar letras");
+           for(i=4, valido =1;valido && i<99 && cmd[i]!='\0';i++){
+                         printf("\n pos: %d",i);
+                if( (cmd[i]>64 && cmd[i]<91) || (cmd[i]>96 && cmd[i]<123) || (cmd[i]>47 && cmd[i]<58) ){        // se for letra ou numero
+                    printf("\n %c e letra", cmd[i]);
                     //valido=0;     // serve para indicar a todos os if's encadeados que houve um erro no input e que se tmos de voltar ao while principal.
                     continue;
                 }
-                else if (cmd[i]==' ' && count_space == 0){  // se for o 1º espaço, se houver 2 dá erro.
-                    printf("\n espaco!");
+                 if (cmd[i]==' ' && count_space == 0){  // se for o 1º espaço, se houver 2 dá erro.
+                    printf("\n espaco entre %c e %c",cmd[i-1],cmd[i+1]);
                     count_space++;
                     pos_espaco=i;   //guarda o intervalo entre o user e a pass, no buffer.
+                    continue;
+                }
+                if (cmd[i]=='\0'){
+                    printf("%s\n","cheguei ao barra zero" );
+                    break;
                 }
                 else{
-                  printf("%s\n","string corrumpida" );
-                  valido = 0;
+                    printf(" %c \n%s\n",cmd[i],"string corrumpida" );
+                    valido = 0;
                 }
+
            }
            if (valido)
            printf("%s\n","input correto" );
